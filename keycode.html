@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script>
+		try{
+		window.onload=function(){
+			var d=document,table=[],now;
+			d.onkeydown=function(e){
+				d.getElementById("display").innerText=e.which+" "+String.fromCharCode(e.which);
+				table[now]&&(table[now].className="");
+				table[e.which]&&(table[e.which].className="now");
+				now=e.which;
+			}
+			for(var $div=d.getElementsByTagName("div"),i=0,j=$div.length;i<j;i++){
+				if($div[i].className!="table"){
+					table[$div[i].innerText.split(":")[0]]=$div[i]
+				}
+			}
+		}
+		}catch(e){
+			document.write("error:"+e)
+		}</script>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<title></title>
+		<style>.table div{border-right:1px solid #999;display:inline-block;background:#f6f6f6;box-shadow:1px 1px 2px rgba(255,255,255,.5) inset,1px 1px 1px rgba(255,255,255,.5) inset,1px 1px 0 rgba(255,255,255,.5) inset;padding:1px 3px}.table{border-radius:5px;border:1px solid #ccc;margin:3px 0;background:#efefef}.table div:first-child{border-radius:5px 0 0 5px}.table div:last-child{border-radius:0 5px 5px 0}#display{border:1px solid #ccc;border-radius:3px;padding:5px;width:101px;background:#f9f9f9;box-shadow:1px 1px 0 rgba(255,255,255,.8) inset;height:58px}.table .now{background:#def}</style>
+	</head>
+	<body>
+		<div id="display"></div>
+		<div class="table">
+			<div>8:delete</div><div>9:Shift||tab||control</div><div>13:Enter</div><div>18:option(alt)</div><div>32:Space</div><div>37:←</div><div>38:↑</div><div>39:→</div><div>40:↓</div><div>91:command(ctrl)</div>
+		</div>
+		<div class="table">
+			<div>48:0</div><div>49:1</div><div>50:2</div><div>51:3</div><div>52:4</div><div>53:5</div><div>54:6</div><div>55:7</div><div>56:8</div><div>57:9</div>
+		</div>
+		<div class="table">
+			<div>65:A</div><div>66:B</div><div>67:C</div><div>68:D</div><div>69:E</div><div>70:F</div><div>71:G</div><div>72:H</div><div>73:I</div><div>74:J</div><div>75:K</div><div>76:L</div><div>77:M</div><div>78:N</div><div>79:O</div><div>80:P</div><div>81:Q</div><div>82:R</div><div>83:S</div><div>84:T</div><div>85:U</div><div>86:V</div><div>87:W</div><div>88:X</div><div>89:Y</div><div>90:Z</div>
+		</div>
+		</div>
+		</body>
+</html>

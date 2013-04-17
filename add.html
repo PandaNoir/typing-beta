@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script><!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script>
+		$(function(){
+			$.Event.prototype = $.extend({
+				pd: function () {
+					this.preventDefault();
+					return this;
+				},
+				sp: function () {
+					this.stopPropagation();
+					return this;
+				}
+			}, $.Event.prototype);
+			$("body").on("click dblclick","input:not(#save)",function(e){
+				e.sp();//liがダブルクリックされたときに増やすやつを正常に動かすため
+			}).on("dblclick","#inputs li",function(e){
+				e.sp();
+				var isLast=$(this).is(":last-child")
+				$("<li>").html("<input type=\"text\" class=\"first\">,<input type=\"text\" class=\"second\"><input type=\"button\" value=\"delete\" class=\"delete\">").insertAfter(this).find("input").eq(0).select();
+				if(isLast){
+					$("#inputs").scrollTop($("#inputs").prop("scrollHeight"));
+				}
+			}).on("click","#inputs li",function(){
+				$("#inputs").find("input:focus").blur();
+			}).on("click",".delete",function(e){
+				e.sp();
+				$(this).parent().remove();
+			}).on("click","#save",function(e){
+				e.pd().sp()
+				var $input=$("input[type=\"text\"]");
+				for(var i=0,j=$input.length/2,result=new Array;i<j;i+=1) result[result.length]="[\""+$input.eq(i*2).val()+"\",\""+$input.eq(i*2+1).val()+"\"]";
+				result.sort();
+				$("#outputs").text(unicodeEscape("["+result.join(",")+"]"));
+			}).on("blur","input",function(){
+				//あれだよあれ、あてられたよみがなが正しいかどうかの判定
+				var table = {"0": "0","1": "1","2": "2","3": "3","4": "4","5": "5","6": "6","7": "7","8": "8","9": "9","あ": "a","い": "i","う": "u","え": "e","お": "o","か": "ka","き": "ki","く": "ku","け": "ke","こ": "ko","さ": "sa","し": "si,shi","す": "su","せ": "se","そ": "so","た": "ta","ち": "ti,chi","つ": "tu,tsu","て": "te","と": "to","な": "na","に": "ni","ぬ": "nu","ね": "ne","の": "no","は": "ha","ひ": "hi","ふ": "hu,fu","へ": "he","ほ": "ho","ま": "ma","み": "mi","む": "mu","め": "me","も": "mo","や": "ya","ゆ": "yu","よ": "yo","ら": "ra","り": "ri","る": "ru","れ": "re","ろ": "ro","わ": "wa","を": "wo","ん": "nn","が": "ga","ぎ": "gi","ぐ": "gu","げ": "ge","ご": "go","ざ": "za","じ": "zi,ji","ず": "zu","ぜ": "ze","ぞ": "zo","だ": "da","ぢ": "di","づ": "du","で": "de","ど": "do","ば": "ba","び": "bi","ぶ": "bu","べ": "be","ぼ": "bo","ぱ": "pa","ぴ": "pi","ぷ": "pu","ぺ": "pe","ぽ": "po","じゃ": "ja,zya,jixya,zixya","じゅ": "ju,zyu,jixyu,zixyu","じぇ": "je,zye,jixe,zixe","じょ": "jo,zyo,jixyo,zixyo","てぃ": "thi,texi","てぇ": "the,text","ふぁ": "fa,fuxa,huxa","ふぃ": "fi,fuxi,huxi","ふぇ": "fe,fuxe,huxe","ふぉ": "fo,fuxo,huxo","ゔぁ": "va,vuxa","ゔぃ": "vi,vuxi","ゔ": "vu","ゔぇ": "ve,vuxe","ゔぉ": "vo,vuxo","うぁ": "uxa,wya","うぃ": "wi,uxi,whi","うぇ": "we,uxe,whe","うぉ": "uxo,who","でぃ": "dhi,dexi","ー": "-","-":"-"," ": " ",",": ",",":": ":","(": "(",")": ")","{": "{","}": "}",".": ".","・": "・","!": "!","a": "a","A": "A","b": "b","B": "B","c": "c","C": "C","d": "d","D": "D","e": "e","E": "E","f": "f","F": "F","g": "g","G": "G","h": "h","H": "H","i": "i","I": "I","j": "j","J": "J","k": "k","K": "K","l": "l","L": "L","m": "m","M": "M","n": "n","N": "N","o": "o","O": "O","p": "p","P": "P","q": "q","Q": "Q","r": "r","R": "R","s": "s","S": "S","t": "t","T": "T","u": "u","U": "U","v": "v","V": "V","w": "w","W": "W","x": "x","X": "X","y": "y","Y": "Y","z": "z","Z": "Z","&": "&","。": ".","%":"%"},
+				katakana={"ア":"あ","イ":"い","ウ":"う","エ":"え","オ":"お","カ":"か","キ":"き","ク":"く","ケ":"け","コ":"こ","サ":"さ","シ":"し","ス":"す","セ":"せ","ソ":"そ","タ":"た","チ":"ち","ツ":"つ","テ":"て","ト":"と","ナ":"な","ニ":"に","ヌ":"ぬ","ネ":"ね","ノ":"の","ハ":"は","ヒ":"ひ","フ":"ふ","ヘ":"へ","ホ":"ほ","マ":"ま","ミ":"み","ム":"む","メ":"め","モ":"も","ヤ":"や","ユ":"ゆ","ヨ":"よ","ラ":"ら","リ":"り","ル":"る","レ":"れ","ロ":"ろ","ワ":"わ","ヲ":"を","ン":"ん","ガ":"が","ギ":"ぎ","グ":"ぐ","ゲ":"げ","ゴ":"ご","ザ":"ざ","ジ":"じ","ズ":"ず","ゼ":"ぜ","ゾ":"ぞ","ダ":"だ","ヂ":"ぢ","ヅ":"づ","デ":"で","ド":"ど","バ":"ば","ビ":"び","ブ":"ぶ","ベ":"べ","ボ":"ぼ","パ":"ぱ","ピ":"ぴ","プ":"ぷ","ペ":"ぺ","ポ":"ぽ","ァ":"ぁ","ィ":"ぃ","ゥ":"ぅ","ェ":"ぇ","ォ":"ぉ","ャ":"ゃ","ュ":"ゅ","ョ":"ょ","ッ":"っ"};
+				if($(this).is(".second")){
+					//ふりがなの方がはずれたときの処理
+					var str=$(this).val();
+					if(str==""){
+						str=$(this).siblings().val();
+						for(var i=0,j=str.length,result="",no=false;i<j;i++){
+							if(str.charAt(i)=="ぁ"||str.charAt(i)=="ぃ"||str.charAt(i)=="ぅ"||str.charAt(i)=="ぇ"||str.charAt(i)=="ぉ"||str.charAt(i)=="ゃ"||str.charAt(i)=="ゅ"||str.charAt(i)=="ょ"||str.charAt(i)=="っ") result+=str.charAt(i)
+							else result+=table[str.charAt(i)]?str.charAt(i):katakana[str.charAt(i)];
+							if(katakana[str.charAt(i)]==undefined&&table[str.charAt(i)]==undefined){
+								if(str.charAt(i)!="ぁ"&&str.charAt(i)!="ぃ"&&str.charAt(i)!="ぅ"&&str.charAt(i)!="ぇ"&&str.charAt(i)!="ぉ"&&str.charAt(i)!="ゃ"&&str.charAt(i)!="ゅ"&&str.charAt(i)!="ょ"&&str.charAt(i)!="っ"){
+									no=true;
+									break;
+								}
+							}
+						}
+						if(no==false)$(this).val(result);
+					}else{
+						for(var i=0,j=str.length;i<j;i++){
+							if(table[str[i]]==undefined){
+								if(str[i]!="ぁ"&&str[i]!="ぃ"&&str[i]!="ぅ"&&str[i]!="ぇ"&&str[i]!="ぉ"&&str[i]!="ゃ"&&str[i]!="ゅ"&&str[i]!="ょ"&&str[i]!="っ"){
+									alert("Error:"+str[i]);
+									break;
+								}
+							}
+						}
+					}
+				}else{
+					str=$(this).val();
+					for(var i=0,j=str.length,result="",no=false;i<j;i++){
+						if(str.charAt(i)=="ぁ"||str.charAt(i)=="ぃ"||str.charAt(i)=="ぅ"||str.charAt(i)=="ぇ"||str.charAt(i)=="ぉ"||str.charAt(i)=="ゃ"||str.charAt(i)=="ゅ"||str.charAt(i)=="ょ"||str.charAt(i)=="っ") result+=str.charAt(i)
+						else result+=table[str.charAt(i)]?str.charAt(i):katakana[str.charAt(i)];
+						if(katakana[str.charAt(i)]==undefined&&table[str.charAt(i)]==undefined){
+							if(str.charAt(i)!="ぁ"&&str.charAt(i)!="ぃ"&&str.charAt(i)!="ぅ"&&str.charAt(i)!="ぇ"&&str.charAt(i)!="ぉ"&&str.charAt(i)!="ゃ"&&str.charAt(i)!="ゅ"&&str.charAt(i)!="ょ"&&str.charAt(i)!="っ"){
+								//正しくないときnoをtrueにする(noは反映させるかどうか)
+								no=true;
+								break;
+							}
+						}
+					}
+					if(no==false) $(this).siblings().eq(0).val(result);
+				}
+				if($(this).parent().find("input").eq(0).val()==""&&$(this).parent().find("input").eq(1).val()=="") $(this).parent().remove()
+			});
+			var unicodeEscape = function(str) {
+				return str.replace(/\W/g, function(c) {
+					return c.charCodeAt(0).toString(16).length==4?"\\u" + c.charCodeAt(0).toString(16):c;
+				});
+			};
+			$.getJSON("tango.json",function(data){
+				for(var i=0,j=data.length,result=new Array;i<j;i+=1) result[i]="<li><input type=\"text\" value=\""+data[i][0]+"\" class=\"first\">,<input type=\"text\" value=\""+data[i][1]+"\" class=\"second\"><input type=\"button\" value=\"delete\" class=\"delete\"></li>";
+				$("#inputs").html("<li class=\"no_mark\"><input type=\"button\" value=\"Save\" id=\"save\"></li>"+result.join(""));
+			})
+		});
+		</script>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<title></title>
+		<style>.no_mark{list-style:none}.add{position:relative;top:8px;color:transparent}.add:hover{color:#000}div{width:360px;border-right:3px solid #ccc}#inputs{width: 367px;padding-left:50px;border-right:3px solid #ccc;-webkit-user-select:none;-moz-user-select:none;user-select:none}#outputs{width:600px}#inputs,#outputs{height:90%;float:left;overflow-y:scroll}input[type=button]{background:#f9f9f9;cursor:pointer}input{height:18px;box-sizing:content-box;padding:1px 3px;border:1px solid #ccc}html,body{height:100%}</style>
+	</head>
+	<body>
+		<ol id="inputs" start="-1">
+		<li class="no_mark"><input type="button" value="Save" id="save"></li>
+		<li class="no_mark">Loading...</li>
+		</ol>
+		<div id="outputs"></div>
+	</body>
+</html>
