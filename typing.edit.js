@@ -55,7 +55,16 @@ $(function() {
             'ふぉ': 'fo,fuxo,huxo', 'ゔぁ': 'va,vuxa',
             'ゔぃ': 'vi,vuxi', 'ゔ': 'vu', 'ゔぇ': 've,vuxe', 'ゔぉ': 'vo,vuxo',
             'うぁ': 'uxa,wya', 'うぃ': 'wi,uxi,whi', 'うぇ': 'we,uxe,whe',
-            'うぉ': 'uxo,who', 'でぃ': 'dhi,dexi',
+            'うぉ': 'uxo,who',
+            'ぐぁ': 'gwa,guxa', 'ぐぃ': 'gwi,guxi',
+            'ぐぅ': 'gwu,guxu', 'ぐぇ': 'gwe,guxe',
+            'ぐぉ': 'gwo,guxo',
+            'つぁ': 'tsa,tuxa,tsuxa', 'つぃ': 'tsi,tuxi,tsuxi',
+            'つぇ': 'tse,tuxe,tsuxe', 'つぉ': 'tso,tuxo,tsuxo',
+            'とぁ': 'twa,toxa', 'とぃ': 'twi,toxi',
+            'とぅ': 'twu,toxu', 'とぇ': 'twe,toxe',
+            'とぉ': 'two,toxo',
+            'でぃ': 'dhi,dexi', 'どぅ': 'dwu,doxu',
             'ー': '-', '-': '-', ' ': ' ', ',': ',', ':': ':',
             '(': '(', ')': ')', '{': '{', '}': '}', '.': '.',
             '・': '・', '!': '!', 'a': 'a', 'A': 'A', 'b': 'b',
@@ -167,7 +176,6 @@ $(function() {
             }
         };//}}}
         var changeRoman = function(nexts, targetPos, pos) {//{{{
-            console.log(getRoman(nexts, targetPos));
             var next = getRoman(nexts, targetPos)[target.route[0] || 0];
             var done = next.slice(0, pos).replace(/ /g, '&nbsp;');
             var rest = next.slice(pos).replace(/ /g, '&nbsp;');
