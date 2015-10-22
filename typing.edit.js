@@ -69,6 +69,7 @@ $(function() {
         };//}}}
         //consonantは'子音'を意味する;
         var moji = function(str, targetPos, pos, key, route) {//{{{
+            // strのtargetPosの位置のローマ字を返す
             route = route || [null];
             var ok = false,
             newRoute = new Array,
@@ -154,103 +155,103 @@ $(function() {
                 .html('<span class="red">' + done + '</span>' + rest);
         };//}}}
         var getRoman = function(str, targetPos) {//{{{
-            //ローマ字の取得
+            // ローマ字の取得
+            // strのtargetPosの位置を取得
             var next = str.charAt(targetPos + 1),
-            result = new Array();
+                result = new Array();
             var nowChar = str.charAt(targetPos);
-            if (isSmallChar(next) || nowChar === 'っ' || nowChar === 'ん') {
-                var consonantAdd = function(a, b) {
-                    //拗音( = 'っ'とか'ぁ'とか小さいやつ)のローマ字取得
-                    if (romanTable[nowChar + next]) {
-                        result = romanTable[nowChar + next]
-                            .split(','); //テーブルにあればそこから
-                    } else {
-                        //なければ、引数から組む。
-                        if (consonant[nowChar].indexOf(',') !== -1) {
-                            var consonants = consonant[nowChar].split(',');
-                            var _i = consonants.length;
-                            for (var i = 0; i < _i; i = 0 | i + 1) {
-                                result.push(consonants[i] + a);
-                                result.push(consonants[i] + b);
-                                //こっちは入力法がいろいろあるパターン()
-                            }
-                        } else {
-                            result = [
-                                consonant[nowChar] + a,
-                                consonant[nowChar] + b
-                            ];
-                        }
+            var smallCharRoman = function(nowChar, next) {
+                var smallChar;
+                if (next === 'ぃ') smallChar = ['yi', 'ixi'];
+                else if (next === 'ぇ') smallChar = ['ye', 'ixe'];
+                else if (next === 'ゃ') smallChar = ['ya', 'ixya'];
+                else if (next === 'ゅ') smallChar = ['yu', 'ixyu'];
+                else if (next === 'ょ') smallChar = ['yo', 'ixyo'];
+                var result = new Array();
+                // 拗音( = 'っ'とか'ぁ'とか小さいやつ)のローマ字取得
+                // 引数には ['yi', 'ixi'] などが渡される
+                if (romanTable[nowChar + next]) {
+                    // 「じゃ」 などromanTableに登録されている場合
+                    result = romanTable[nowChar + next]
+                        .split(','); //テーブルにあればそこから
+                } else if (consonant[nowChar].indexOf(',') !== -1) {
+                    // romanTableになければ、引数から組む。
+                    var consonants = consonant[nowChar].split(',');
+                    var _i = consonants.length;
+                    for (var i = 0; i < _i; i = 0 | i + 1) {
+                        result.push(consonants[i] + smallChar[0]);
+                        result.push(consonants[i] + smallChar[1]);
+                        //こっちは入力法がいろいろあるパターン()
                     }
-                };
-                if (nowChar === 'っ') {
-                    //いまの文字が「っ」の場合、テーブルを作成
-                    if (consonant[next].indexOf(',') === -1 &&
-                        !isSmallChar(str.charAt(targetPos + 2))) {
-
-                        var nextRoman = romanTable[next].split(',');
-                        var i = 0, _i = nextRoman.length;
-                        for (; i < _i; i = 0 | i + 1) {
-                            result.push(
-                                consonant[next] + consonant[next] +
-                                romanTable[next].slice(-1)
-                            );
-                            result.push('xtu' + nextRoman[i]);
-                            result.push('xtsu' + nextRoman[i]);
-                        }
-                    } else {
-                        result = new Array();
-                        if (isSmallChar(str.charAt(targetPos + 2))) {
-                            //拗音の処理
-                            targetPos += 1;
-                            next = str.charAt(targetPos + 1);
-                            var addStr = [];
-                            if (next === 'ぃ') addStr = ['yi', 'ixi'];
-                            else if (next === 'ぇ') addStr = ['ye', 'ixe'];
-                            else if (next === 'ゃ') addStr = ['ya', 'ixya'];
-                            else if (next === 'ゅ') addStr = ['yu', 'ixyu'];
-                            else if (next === 'ょ') addStr = ['yo', 'ixyo'];
-                            consonantAdd(addStr[0], addStr[1]);
-                            targetPos -= 1;
-                            next = str.charAt(targetPos + 1);
-                            var consonants = consonant[next].split(',');
-                            var _i = _i = consonants.length;
-                            for (var i = 0; i < _i; i = 0 | i + 1) {
-                                var _j = result.length;
-                                for (var j = 0; j < _j; j = 0 | j + 1) {
-                                    result.push('xtu' + result[j]);
-                                    result.push('xtsu' + result[j]);
-                                    result[j] = consonants[i] + result[j];
-                                }
-                            }
-                        } else {
-                            var consonants = j = consonant[next].split(',');
-                            var _i = consonants.length;
-                            for (var i = 0; i < _i; i = 0 | i + 1) {
-                                result.push(consonants[i] + consonants[i] +
-                                            romanTable[next].slice(-1));
-                                result.push('xtu' + romanTable[next]);
-                                result.push('xtsu' + romanTable[next]);
-                            }
-                        }
-                    }
-                } else if (nowChar === 'ん') {
-                    if (next !== '' &&
-                        (consonant[next] === undefined ||
-                         consonant[next] !== 'n' &&
-                         consonant[next] !== '' &&
-                         consonant[next] !== 'y')) {
-                        result = ['n'];
-                    } else result = ['nn']; //こっちはnの数の判定
                 } else {
-                    var addStr = ['', ''];
-                    if (next === 'ぃ')addStr = ['yi', 'ixi'];
-                    else if (next === 'ぇ') addStr = ['ye', 'ixe'];
-                    else if (next === 'ゃ') addStr = ['ya', 'ixya'];
-                    else if (next === 'ゅ') addStr = ['yu', 'ixyu'];
-                    else if (next === 'ょ') addStr = ['yo', 'ixyo'];
-                    else result = romanTable[nowChar + next].split(',');
-                    if (addStr[0] !== '') consonantAdd(addStr[0], addStr[1]);
+                    result = [
+                        consonant[nowChar] + smallChar[0],
+                        consonant[nowChar] + smallChar[1]
+                    ];
                 }
+                return result;
+            };
+            if (nowChar === 'っ') {
+                //いまの文字が「っ」の場合、テーブルを作成
+                if (consonant[next].indexOf(',') === -1 &&
+                    !isSmallChar(str.charAt(targetPos + 2))) {
+
+                    var nextRoman = romanTable[next].split(',');
+                    var i = 0, _i = nextRoman.length;
+                    for (; i < _i; i = 0 | i + 1) {
+                        result.push(
+                            consonant[next] + consonant[next] +
+                            romanTable[next].slice(-1)
+                        );
+                        result.push('xtu' + nextRoman[i]);
+                        result.push('xtsu' + nextRoman[i]);
+                    }
+                } else {
+                    result = new Array();
+                    if (isSmallChar(str.charAt(targetPos + 2))) {
+                        //拗音の処理
+                        targetPos += 1;
+                        next = str.charAt(targetPos + 1);
+                        result = smallCharRoman(nowChar, next);
+                        targetPos -= 1;
+                        next = str.charAt(targetPos + 1);
+                        var consonants = consonant[next].split(',');
+                        var _i = _i = consonants.length;
+                        for (var i = 0; i < _i; i = 0 | i + 1) {
+                            var _j = result.length;
+                            for (var j = 0; j < _j; j = 0 | j + 1) {
+                                result.push('xtu' + result[j]);
+                                result.push('xtsu' + result[j]);
+                                result[j] = consonants[i] + result[j];
+                            }
+                        }
+                    } else {
+                        var consonants = j = consonant[next].split(',');
+                        var _i = consonants.length;
+                        for (var i = 0; i < _i; i = 0 | i + 1) {
+                            result.push(consonants[i] + consonants[i] +
+                                        romanTable[next].slice(-1));
+                            result.push('xtu' + romanTable[next]);
+                            result.push('xtsu' + romanTable[next]);
+                        }
+                    }
+                }
+            } else if (nowChar === 'ん') {
+                if (next !== '' &&
+                    (consonant[next] === undefined ||
+                     consonant[next] !== 'n' &&
+                         consonant[next] !== '' &&
+                             consonant[next] !== 'y')) {
+                    result = ['n'];
+                } else result = ['nn']; //こっちはnの数の判定
+            } else {
+                if (next === 'ぃ'
+                    || next === 'ぇ'
+                    || next === 'ゃ'
+                    || next === 'ゅ'
+                    || next === 'ょ')
+                    result = smallCharRoman(nowChar, next);
+                else result = romanTable[nowChar + next].split(',');
             } else {
                 if (romanTable[nowChar] !== ',') {
                     result = romanTable[nowChar].split(',');
@@ -281,22 +282,22 @@ $(function() {
             return false;
         };//}}}
         var text = data,
-        TheYukari = false,
-        target = {
-            strPos: 0,
-            pos: 0,
-            now: rand(text.length),
-            route: [null]
-        },
-        miss = 0,
-        collect = 0,
-        started = false,
-        $kanji = $('#kanji'),
-        $hira = $('#hiragana'),
-        $misses = $('#miss'),
-        $collects = $('#collect'),
-        $roman = $('#roman'),
-        time = 0;
+            TheYukari = false,
+            target = Immutable({
+                strPos: 0,
+                pos: 0,
+                now: rand(text.length),
+                route: [null]
+            }),
+            miss = 0,
+            collect = 0,
+            started = false,
+            $kanji = $('#kanji'),
+            $hira = $('#hiragana'),
+            $misses = $('#miss'),
+            $collects = $('#collect'),
+            $roman = $('#roman'),
+            time = 0;
         text.bsearch = function(key) {
             var that = this, start = 0, end = that.length, mid;
             while (start <= end) {
@@ -422,7 +423,7 @@ $(function() {
                         nextChar = readings.charAt(target.strPos + 1);
 
                         $roman.find('div.now').removeClass('now')
-                        .next().addClass('now');
+                            .next().addClass('now');
                         var nowReading = readings.charAt(target.strPos);
                         if (isSmallChar(nextChar) || nowReading === 'っ') {
                             target.strPos += 2;
