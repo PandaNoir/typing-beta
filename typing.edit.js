@@ -446,8 +446,9 @@ $(function() {
                 if (TheYukari) {
                     //ユカリモードに入ったときの処理
                     $('body').addClass('TheYukari');
-                    //target.now = text.bsearch('結月ゆかり');
-                    target.now = text.bsearch('マルドゥック・スクランブル');
+                    target.now = text.bsearch('結月ゆかり');
+                    // target.now = text.bsearch('マルドゥック・スクランブル');
+                    // target.now = text.bsearch('ツァラトゥストラはこう言った');
                 } else {
                     //ユカリモードを抜けたときの処理
                     $('body').removeClass('TheYukari');
