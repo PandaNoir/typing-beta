@@ -1,7 +1,7 @@
 $(function() {
     $.getJSON('./tango.json', null, function(data) {
         //単語の読み込み待ち
-        has = function(arr, str) {
+        var has = function(arr, str) {
             for (var i = 0, _i = arr.length; i < _i; i = 0 | i + 1) {
                 if (arr[i] === str) return true;
             }
