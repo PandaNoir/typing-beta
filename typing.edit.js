@@ -1,15 +1,9 @@
 $(function() {
     $.getJSON('./tango.json', null, function(data) {
         //単語の読み込み待ち
-        Array.prototype.fPush = function() {
-            for (var i = 0, j = arguments.length; i < j; i = 0 | i + 1) {
-                this[this.length] = arguments[i];
-            }
-            return this;
-        };
-        Array.prototype.has = function(str) {
-            for (var i = 0, j = this.length; i < j; i = 0 | i + 1) {
-                if (this[i] === str) return true;
+        has = function(arr, str) {
+            for (var i = 0, _i = arr.length; i < _i; i = 0 | i + 1) {
+                if (arr[i] === str) return true;
             }
             return false;
         };
@@ -87,10 +81,10 @@ $(function() {
                 for (var i = 0, j = str.length; i < j; i += 1) {
                     //ルートを決定
                     if (str[i].charAt(pos) === key &&
-                        (route.has(i) || route.has(null))) {
+                        (has(route, i) || has(route, null))) {
                         ok = true;
                         if (pos === str[i].length - 1) ok = 'end';
-                        newRoute.fPush(i);
+                        newRoute.push(i);
                     }
                 }
                 if (ok) return {route: newRoute, ok: ok};
@@ -104,10 +98,10 @@ $(function() {
                 for (var i = 0, j = str.length; i < j; i += 1) {
                     //ルートを決定
                     if (str[i].charAt(pos) === key &&
-                        (route.has(i) || route.has(null))) {
+                        (has(route, i) || has(route, null))) {
                         ok = true;
                         if (pos === str[i].length - 1) ok = 'end';
-                        newRoute.fPush(i);
+                        newRoute.push(i);
                     }
                 }
                 if (ok) return {route: newRoute, ok: ok};
@@ -176,8 +170,9 @@ $(function() {
                             var consonants = consonant[nowChar].split(',');
                             var _i = consonants.length;
                             for (var i = 0; i < _i; i = 0 | i + 1) {
-                                result.fPush(consonants[i] + a,
-                                     consonants[i] + b); //こっちは入力法がいろいろあるパターン()
+                                result.push(consonants[i] + a);
+                                result.push(consonants[i] + b);
+                                //こっちは入力法がいろいろあるパターン()
                             }
                         } else {
                             result = [
@@ -222,8 +217,8 @@ $(function() {
                             for (var i = 0; i < _i; i = 0 | i + 1) {
                                 var _j = result.length;
                                 for (var j = 0; j < _j; j = 0 | j + 1) {
-                                    result.fPush('xtu' + result[j],
-                                         'xtsu' + result[j]);
+                                    result.push('xtu' + result[j]);
+                                    result.push('xtsu' + result[j]);
                                     result[j] = consonants[i] + result[j];
                                 }
                             }
@@ -231,12 +226,10 @@ $(function() {
                             var consonants = j = consonant[next].split(',');
                             var _i = consonants.length;
                             for (var i = 0; i < _i; i = 0 | i + 1) {
-                                result.fPush(
-                                    consonants[i] + consonants[i] +
-                                        romanTable[next].slice(-1),
-                                    'xtu' + romanTable[next],
-                                    'xtsu' + romanTable[next]
-                                );
+                                result.push(consonants[i] + consonants[i] +
+                                            romanTable[next].slice(-1));
+                                result.push('xtu' + romanTable[next]);
+                                result.push('xtsu' + romanTable[next]);
                             }
                         }
                     }
@@ -270,7 +263,7 @@ $(function() {
                 if (consonant[nowChar] !== 'n' && consonant[nowChar] !== '') {
                     result = getRoman(str.slice(targetPos), 0);
                     for (var i = 0, _i = result.length; i < _i; i = 0 | i + 1) {
-                        result.fPush('n' + result[i]);
+                        result.push('n' + result[i]);
                     }
                 }
             }
