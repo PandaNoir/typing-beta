@@ -10,6 +10,26 @@ $(function() {
         function rand(num) {
             return 0 | Math.random() * num;
         }
+        function keyCodeToString(key, pushesShiftKey) {
+            var res = '';
+            if (pushesShiftKey) {
+                if (key === 49) res = '!'; //感嘆符の処理
+                else if (key === 53) res = '%';
+                else if (key === 54) res = '&'; //&の処理
+                else if (key === 56) res = '('; //初めかっこの処理
+                else if (key === 57) res = ')'; //終わりかっこの処理
+                else if (key === 219) res = ''; //初め波かっこの処理
+                else if (key === 221) res = ''; //終わり波かっこの処理
+            } else {
+                if (key === 32) res = ' '; //スペースキー
+                else if (key === 186) res = ':'; //コロンの処理
+                else if (key === 188) res = ','; //コンマの処理
+                else if (key === 189) res = '-'; //のばし音の処理
+                else if (key === 190) res = '.'; //ドットの処理
+                else if (key === 191) res = '・'; //中点の処理
+            }
+            return res;
+        }
 
         var romanTable = {//{{{
             '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',
@@ -281,23 +301,7 @@ $(function() {
                 next === 'ょ') return true;
             return false;
         };//}}}
-        var text = data,
-            TheYukari = false,
-            target = Immutable({
-                strPos: 0,
-                pos: 0,
-                now: rand(text.length),
-                route: [null]
-            }),
-            miss = 0,
-            collect = 0,
-            started = false,
-            $kanji = $('#kanji'),
-            $hira = $('#hiragana'),
-            $misses = $('#miss'),
-            $collects = $('#collect'),
-            $roman = $('#roman'),
-            time = 0;
+        var text = data;
         text.bsearch = function(key) {
             var that = this, start = 0, end = that.length, mid;
             while (start <= end) {
@@ -312,39 +316,23 @@ $(function() {
             }
             return -1;
         };
-        //文字列の検証
-        /*
-        console.log('start');
-        for (var k = 0, l = text.length; k < l; k += 1) {
-            try {
-                showRoman(text[k])
-            } catch (h$$4) {
-                console.log(text[k][1])
-                var jj = text[k][1].length;
-                for (var ii = 0; ii < jj; ii = 0|ii+1) {
-                    var c;
-                    loop: {
-                        c = text[k][1].charAt(ii);
-                        var i = 0, j = romanTable.length;
-                        for (; i < j; i = 0|i+1) if (c === romanTable[i]) {
-                            c = true;
-                            break loop;
-                        }
-                        c = false;
-                    }
-                    if (c)
-                    console.log('\u300c' + text[k][1].charAt(ii) +
-                    '\u300d\u3068\u3044\u3046\u6587\u5b57\u304c\u3042\u308a\u307e\u3059\u3002')
-                }
-            console.log(k);
-            break;
-            }
-            if (k === l- 1)
-            console.log('\u554f\u984c\u306f\u3042\u308a\u307e\u305b\u3093\u3002');
-        };
-    console.log('end')
-//文字列の検証*/
-        $kanji.text('スペースキーでスタート');
+        var TheYukari = false,
+            target = {
+                strPos: 0,
+                pos: 0,
+                now: rand(text.length),
+                route: [null]
+            },
+            miss = 0,
+            collect = 0,
+            started = false,
+            $kanji = $('#kanji'),
+            $hira = $('#hiragana'),
+            $misses = $('#miss'),
+            $collects = $('#collect'),
+            $roman = $('#roman'),
+            time = 0;
+        $kanji.text('スペースキーでスタート'); // ロードが終了したから
         var pressStart = function(e) {
             if (e.keyCode !== 32)
                 return;
@@ -372,30 +360,17 @@ $(function() {
             $(window).on('keydown', function(e) {
                 var readings = text[target.now][1];
                 var nextChar = readings.charAt(target.strPos + 1);
-                var results, key = String.fromCharCode(e.keyCode);
+                var results;
                 //シフトキーを押したとき(押しっぱなしはOK)、コントロールキーを押したとき、コントロールキーが押されているとき。
                 if (e.which === 16 || e.which === 91 ||
                     e.ctrlKey || e.metaKey)
                     return;
 
-                if (e.shiftKey) {
-                    key = key.toUpperCase();
-                    if (e.which === 49) key = '!'; //感嘆符の処理
-                    else if (e.which === 53) key = '%';
-                    else if (e.which === 54) key = '&'; //&の処理
-                    else if (e.which === 56) key = '('; //初めかっこの処理
-                    else if (e.which === 57) key = ')'; //終わりかっこの処理
-                    else if (e.which === 219) key = ''; //初め波かっこの処理
-                    else if (e.which === 221) key = ''; //終わり波かっこの処理
-                } else {
-                    key = key.toLowerCase();
-                    if (e.which === 32) key = ' '; //スペースキー
-                    if (e.which === 186) key = ':'; //コロンの処理
-                    if (e.which === 188) key = ','; //コンマの処理
-                    if (e.which === 189) key = '-'; //のばし音の処理
-                    if (e.which === 190) key = '.'; //ドットの処理
-                    if (e.which === 191) key = '・'; //中点の処理
-                }
+                key = keyCodeToString(e.which, e.shiftKey);
+                if (key === '' && e.shiftKey)
+                    key = String.fromCharCode(e.keyCode).toUpperCase();
+                if (key === '' && !e.shiftKey)
+                    key = String.fromCharCode(e.keyCode).toLowerCase();
 
                 var results = moji(
                     text[target.now][1],
