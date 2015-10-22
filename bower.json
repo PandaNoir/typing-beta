@@ -1,0 +1,23 @@
+{
+  "name": "typing-beta",
+  "description": "",
+  "main": "typing.js",
+  "authors": [
+    "PandaNoir <moon_in_france@yahoo.co.jp>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/PandaNoir/typing-beta",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "immutable": "~3.7.5",
+    "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip"
+  }
+}
