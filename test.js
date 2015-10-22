@@ -4,6 +4,12 @@ var getRoman = Typing.getRoman;
 var isSmallChar = Typing.isSmallChar;
 var moji = Typing.moji;
 // moji('まるどぅっく・すくらんぶる', 1, 1, 'r', );
+assert.deepEqual(getRoman('ささだんご', 0), ['sa']);// ま
+assert.deepEqual(getRoman('ささだんご', 1), ['sa']);// ま
+assert.deepEqual(getRoman('ささだんご', 2), ['da']);// ま
+assert.deepEqual(getRoman('ささだんご', 3), ['n']);// ま
+assert.deepEqual(getRoman('ささだんご', 4), ['go', 'ngo']);// ま
+
 assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 0), ['ma']);// ま
 assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 1), ['ru']);// る
 assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 2), ['dwu', 'doxu']);// どぅ

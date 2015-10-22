@@ -67,15 +67,14 @@ var moji = function(str, targetPos, pos, key, route) {//{{{
     // strのtargetPosの位置のローマ字と合っているか
     route = route || [null];
     var ok = false,
-    newRoute = new Array,
-    next = str.charAt(targetPos + 1);
+        newRoute = new Array,
+        next = str.charAt(targetPos + 1);
     var nowChar = str.charAt(targetPos);
     if (isSmallChar(next) || nowChar === 'っ' ||
         nowChar === 'ん' || str.charAt(targetPos - 1) === 'ん') {
         //いまの文字が拗音の場合
         str = getRoman(str, targetPos);
-    }
-    if (romanTable[nowChar].indexOf(',') > 0) {
+    }else if (romanTable[nowChar].indexOf(',') > 0) {
         // ',' でないかつ ',' を含む
         //拗音を含まない。また、複数のキータイプがある。
         str = romanTable[str.charAt(targetPos)].split(',');
