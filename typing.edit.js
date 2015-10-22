@@ -264,12 +264,12 @@ $(function() {
                              consonant[next] !== 'y')) {
                     result = ['n'];
                 } else result = ['nn']; //こっちはnの数の判定
-            } else {
-                if (next === 'ぃ'
-                    || next === 'ぇ'
-                    || next === 'ゃ'
-                    || next === 'ゅ'
-                    || next === 'ょ')
+            } else if (isSmallChar(next)) {
+                if (next === 'ぃ' ||
+                    next === 'ぇ' ||
+                    next === 'ゃ' ||
+                    next === 'ゅ' ||
+                    next === 'ょ')
                     result = smallCharRoman(nowChar, next);
                 else result = romanTable[nowChar + next].split(',');
             } else {
