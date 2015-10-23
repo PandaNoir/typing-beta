@@ -233,11 +233,11 @@ function has(arr, str) {
         if (arr[i] === str) return true;
     }
     return false;
-};
+}
 (function(global) {
-    "use strict;"
-    if ("process" in global) {
-        module["exports"] = {
+    'use strict';
+    if ('process' in global) {
+        module['exports'] = {
             romanTable: romanTable,
             moji: moji,
             getRoman: getRoman,
