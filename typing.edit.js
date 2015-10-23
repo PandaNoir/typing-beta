@@ -82,7 +82,7 @@ $(function() {
                 strPos: 0,
                 pos: 0,
                 now: rand(text.length),
-                route: [null]
+                route: UNDECIDED
             },
             miss = 0,
             collect = 0,
@@ -173,7 +173,7 @@ $(function() {
                             target.strPos = 0;
                             showRoman(text[target.now]);
                         }
-                        target.route = [null];
+                        target.route = UNDECIDED;
                         target.pos = 0;
                     }
                     changeRoman(
@@ -208,7 +208,7 @@ $(function() {
                     target.now = rand(text.length);
                 }
                 if (started) showRoman(text[target.now]);
-                target.route = [null];
+                target.route = UNDECIDED;
                 target.pos = 0;
                 return false;
             }

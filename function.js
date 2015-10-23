@@ -1,3 +1,4 @@
+var UNDECIDED = 42; // ただの定数。数字に意味は無い。
 var romanTable = {//{{{
     '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',
     '6': '6', '7': '7', '8': '8', '9': '9', 'あ': 'a',
@@ -65,7 +66,7 @@ var consonant = {
 };//}}}
 var moji = function(str, targetPos, pos, key, route) {//{{{
     // strのtargetPosの位置のローマ字と合っているか
-    route = route || [null];
+    route = route || UNDECIDED;
     var ok = false,
         newRoute = new Array,
         next = str.charAt(targetPos + 1);
@@ -85,13 +86,13 @@ var moji = function(str, targetPos, pos, key, route) {//{{{
             ok = true;
             if (pos === str.length - 1) ok = 'end';
         }
-        if (ok) return {route: [null], ok: ok};
+        if (ok) return {route: UNDECIDED, ok: ok};
         return {ok: false};
     }
     for (var i = 0, j = str.length; i < j; i += 1) {
         //ルートを決定
         if (str[i].charAt(pos) === key &&
-            (has(route, i) || has(route, null))) {
+            (has(route, i) || route === UNDECIDED)) {
             ok = true;
         if (pos === str[i].length - 1) ok = 'end';
         newRoute.push(i);
@@ -186,8 +187,8 @@ var getRoman = function(str, targetPos) {//{{{
         if (next !== '' &&
             (consonant[next] === undefined ||
              consonant[next] !== 'n' &&
-                 consonant[next] !== '' &&
-                     consonant[next] !== 'y')) {
+             consonant[next] !== '' &&
+             consonant[next] !== 'y')) {
             result = ['n'];
         } else result = ['nn']; //こっちはnの数の判定
     } else if (isSmallChar(next)) {
@@ -240,7 +241,8 @@ function has(arr, str) {
             romanTable: romanTable,
             moji: moji,
             getRoman: getRoman,
-            isSmallChar: isSmallChar
+            isSmallChar: isSmallChar,
+            UNDECIDED: UNDECIDED
         };
     }
 })((this || 0).self || global);

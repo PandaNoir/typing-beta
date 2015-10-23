@@ -3,6 +3,7 @@ var assert = require('assert');
 var getRoman = Typing.getRoman;
 var isSmallChar = Typing.isSmallChar;
 var moji = Typing.moji;
+var UNDECIDED = Typing.UNDECIDED;
 // moji('まるどぅっく・すくらんぶる', 1, 1, 'r', );
 assert.deepEqual(getRoman('ささだんご', 0), ['sa']);// ま
 assert.deepEqual(getRoman('ささだんご', 1), ['sa']);// ま
@@ -22,15 +23,15 @@ assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 10), ['n'])
 assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 11), ['bu', 'nbu']);// ぶ
 assert.deepEqual(getRoman('まるどぅっく・すくらんぶる', 12), ['ru']);// る
 
-assert.deepEqual(moji('まるどぅっく・すくらんぶる', 0, 0, 'm', [null]), {ok: true, route: [null]});
-assert.deepEqual(moji('まるどぅっく・すくらんぶる', 0, 0, 'k', [null]), {ok: false});
-assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 0, 'd', [null]), {ok: true, route: [0, 1]});
+assert.deepEqual(moji('まるどぅっく・すくらんぶる', 0, 0, 'm', UNDECIDED), {ok: true, route: UNDECIDED});
+assert.deepEqual(moji('まるどぅっく・すくらんぶる', 0, 0, 'k', UNDECIDED), {ok: false});
+assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 0, 'd', UNDECIDED), {ok: true, route: [0, 1]});
 assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 1, 'w', [0, 1]), {ok: true, route: [0]});
 assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 1, 'o', [0, 1]), {ok: true, route: [1]});
 assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 2, 'x', [0]), {ok: false}); // dw -> o
 assert.deepEqual(moji('まるどぅっく・すくらんぶる', 2, 2, 'u', [1]), {ok: false}); // do -> u
-assert.deepEqual(moji('まるどぅっく・すくらんぶる', 11, 0, 'b', [null]), {ok: true, route:[0]}); // do -> u
-assert.deepEqual(moji('まるどぅっく・すくらんぶる', 11, 0, 'n', [null]), {ok: true, route:[1]}); // do -> u
+assert.deepEqual(moji('まるどぅっく・すくらんぶる', 11, 0, 'b', UNDECIDED), {ok: true, route:[0]}); // do -> u
+assert.deepEqual(moji('まるどぅっく・すくらんぶる', 11, 0, 'n', UNDECIDED), {ok: true, route:[1]}); // do -> u
 
 assert.equal(isSmallChar('ぁ'), true);
 assert.equal(isSmallChar('ぃ'), true);
